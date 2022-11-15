@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"layout:decorate="~{layout}"xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	<head>
+		<title>Relatórios</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	</head>
+	<body>
+		<section layout:fragment="content">
+			<div class="local">Relatórios</div>
+			<div class="mt-5">
+				<div th:class="${status_alert}" role="alert" th:if="${message} != null">
+					<span th:text="${message}"></span>
+				    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<a th:href="@{/query/insert}" class="col-4" sec:authorize="hasAnyAuthority('Admin')"><button type="button" class="btn btn-primary">Adicionar novo relatório</button></a>
+				<table class="table table-bordered table-hover table-striped mt-4">
+					<thead class="thead-dark">
+						<tr>
+							<th class="text-center">Relatório</th>
+							<th class="text-center">Descrição</th>
+							<th class="text-center">Validar</th>
+							<th class="text-center">Executar</th>
+							<th class="text-center" sec:authorize="hasAnyAuthority('Admin')">Editar</th>
+							<th class="text-center" sec:authorize="hasAnyAuthority('Admin')">Deletar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:if="${#lists.isEmpty(queries)}">
+							<td th:colspan="100" class="text-center">Nenhuma consulta encontrada...</td>
+						</tr>
+						<tr th:each="query : ${queries}">
+							<td width="15%" th:text="${query.name}"></td>
+							<td width="45%" th:text="${query.description}"></td>
+							<td class="functional-icon">
+								<form th:object="${query}">
+									<a href="#"><i class="fa fa-check-square" th:id="|test_${query.id}|" th:formaction="@{|/api/query/validate?idQuery=${query.id}|}" th:method="post" th:attr="onclick=|popup('test_${query.id}')|"></i></a>
+								</form>
+							</td>
+							<td width="10%" class="functional-icon"><a th:href="@{|/query/filter?idQuery=${query.id}|}"><i class="fa fa-play"></i></a></td>
+							<td width="10%" class="functional-icon" sec:authorize="hasAnyAuthority('Admin')">
+								<a th:href="@{|/query/update?idQuery=${query.id}|}"><i class="fa fa-pencil-square-o"></i></a>
+							</td>
+							<td width="10%" class="functional-icon" sec:authorize="hasAnyAuthority('Admin')">
+								<form th:method="delete">
+									<button type="submit" class="action-button" th:formaction="@{|/query/delete?idQuery=${query.id}|}"  th:id="@{|del_${query.id}|}" th:attr="onclick=|return confirm('Você realmente deseja deleta a consulta: ${query.description}?');popup('del_${query.id}')|" >
+										<i class="fa fa-trash"></i>
+									</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</body>
+</html>

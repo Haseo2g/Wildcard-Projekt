@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<title>Relatório</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="local">Relatório</div>
+		<div class="mt-5">
+			<div th:class="${status_alert}" role="alert" th:if="${message} != null">
+				<span th:text="${message}"></span>
+			    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form th:object="${query}" class="col-12" th:method="${function} == 'insert' ? 'post' : 'put'" style="height:100%;">
+				<th:block th:if="${function} == 'update'">
+					<input type="hidden" th:field="*{id}"/>
+				</th:block>
+				<div class="form-row mt-3">
+					<div class="col-6">
+						<label>Banco de dados</label>
+						<select class="form-control" th:field="*{database}" required>
+						    <option th:each="database: ${databases}" th:value="${database.id}" th:text="${database.alias}"></option>
+						</select>
+					</div>
+					<div class="col-6">
+						<label>Nome</label>
+						<input type="text" placeholder="Nome" class="form-control" th:field="*{name}" maxlength="255" required/>
+					</div>
+				</div>
+				<div class="form-row mt-3">
+					<div class="d-flex flex-column col-12">
+						<label>Descrição</label>
+						<textarea placeholder="Descrição" th:field="*{description}" rows="2" maxlength="255" required></textarea>
+					</div>
+				</div>
+				<div class="form-row mt-3">
+					<div class="d-flex flex-column col-12">
+						<label>Query</label>
+						<textarea placeholder="Query" th:field="*{queryLine}" rows="10" maxlength="4000" required></textarea>
+					</div>
+				</div>
+				<div class="form-row mt-3">
+					<div class="col-4">
+						<a th:href="@{/home}">
+			   				<button type="button" class="btn btn-primary col-12">Voltar</button>
+			   			</a>
+			   		</div>
+					<div class="col-4">
+					    <button type="submit" th:id="btn1" class="btn btn-primary col-12" th:method="${function} == 'insert' ? 'post' : 'put'" th:formaction="@{/query/preview}">Pré visualizar</button>
+			   		</div>
+					<div class="col-4">
+			   			<button type="submit" class="btn btn-primary col-12" th:formaction="@{|/query/save|}" th:text="${function} == 'insert' ? 'Adicionar' : 'Atualizar'"></button>
+			   		</div>
+			   		<div class="col-12">
+						<th:block th:if="${table != null}" th:include="pages/query/filter_fragment.html :: data_table"></th:block>
+			   		</div>
+				</div>
+			</form>
+		</div>
+	</section>
+</body>
+
+</html>

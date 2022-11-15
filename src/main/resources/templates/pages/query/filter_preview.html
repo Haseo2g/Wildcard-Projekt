@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<title>Relatório - Filtros</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<script th:src="@{/js/query.filter.js}"></script>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="local">Filtros</div>
+		<div class="mt-5">
+			<div th:class="${status_alert}">
+				<strong th:text="${message}"></strong>
+			</div>
+			<form th:object="${header}" class="col-12">
+				<th:block th:if="${headers != null}">
+					<table 
+						class="table table-bordered table-hover tableUras table-striped mt-3" id="filter-table">
+						<thead class="thead-dark">
+							<tr>
+								<th class="text-center">Campo</th>
+								<th class="text-center">Tipo de filtro</th>
+								<th class="text-center">Parâmetro 1</th>
+								<th class="text-center">Parâmetro 2</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="header : ${headers}">
+								<tr th:id="${header.value.name}">
+									<td th:text="${header.key}" th:id="@{|${header.value.name}_0|}"></td>
+									<th:block th:switch="${#strings.toLowerCase(header.value.className)}">
+										<th:block th:case="boolean"th:include="pages/query/filter_fragment.html :: boolean_filter"></th:block>
+										<th:block th:case="short"th:include="pages/query/filter_fragment.html :: number_filter"></th:block>
+										<th:block th:case="integer"th:include="pages/query/filter_fragment.html :: number_filter"></th:block>
+										<th:block th:case="long"th:include="pages/query/filter_fragment.html :: number_filter"></th:block>
+										<th:block th:case="float"th:include="pages/query/filter_fragment.html :: number_filter"></th:block>
+										<th:block th:case="double"th:include="pages/query/filter_fragment.html :: number_filter"></th:block>
+										<th:block th:case="string"th:include="pages/query/filter_fragment.html :: text_filter"></th:block>
+										<th:block th:case="date"th:include="pages/query/filter_fragment.html :: date_filter"></th:block>
+										<th:block th:case="datetime"th:include="pages/query/filter_fragment.html :: datetime_filter"></th:block>
+										<th:block th:case="localdatetime"th:include="pages/query/filter_fragment.html :: datetime_filter"></th:block>
+										<th:block th:case="timestamp"th:include="pages/query/filter_fragment.html :: datetime_filter"></th:block>
+										<th:block th:case="*"th:include="pages/query/filter_fragment.html :: other_filter"></th:block>
+									</th:block>
+								</tr>
+							</th:block>
+							<tr th:include="pages/query/filter_fragment.html :: limit_filter" id="limit">
+							</tr>
+						</tbody>
+					</table>
+				</th:block>
+				<div class="form-row mt-3 mb-3">
+					<div class="col-6">
+						<a th:href="@{/home}">
+			   				<button type="button" class="btn btn-primary col-12">Voltar</button>
+			   			</a>
+			   		</div>
+					<div class="col-6" th:if="${headers != null}">
+						<button type="button" class="col-12 btn btn-primary" th:attr="onclick=@{|getQueryParams(${idQuery})|}">Executar</button>
+			   		</div>
+		   		</div>
+			</form>
+		</div>
+	</section>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"layout:decorate="~{layout}"xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="utf-8">
+</head>
+	<section layout:fragment="content">
+	<!-- Filtro para retornos booleanos (Bit/Bool) -->
+		<th:block th:fragment="boolean_filter">
+			<td colspan="3">
+				<select class="form-control" th:id="@{|${header.value.name}_1|}">
+					<option th:value="empty"></option>
+					<option th:value="true">Sim</option>
+					<option th:value="false">Não</option>
+				</select>
+			</td>
+			<td style="display:none" th:text="boolean" th:id="@{|${header.value.name}_4|}"/></td>
+		</th:block>
+		
+		<!-- Filtro numérico (Small int, int, big int) -->
+		<th:block th:fragment="number_filter">
+			<td>
+				<select class="form-control" th:id="@{|${header.value.name}_1|}">
+					<option th:value="empty"></option>
+					<option th:value="equal">=</option>
+					<option th:value="greaterthan">&gt;</option>
+					<option th:value="lowerthan">&lt;</option>
+					<option th:value="between">entre</option>
+				</select>
+			</td>
+			<td><input type="number" class="form-control"placeholder="valor 1" th:id="@{|${header.value.name}_2|}"/></td>
+			<td><input type="number" class="form-control"placeholder="valor 2" th:id="@{|${header.value.name}_3|}"/></td>
+			<td style="display:none" th:text="number" th:id="@{|${header.value.name}_4|}"/></td>
+		</th:block>
+		
+		<!-- Filtro para textos (Varchar, text) -->
+		<th:block th:fragment="text_filter">
+			<td>
+				<select class="form-control" th:id="@{|${header.value.name}_1|}">
+					<option th:value="empty"></option>
+					<option th:value="equal">=</option>
+					<option th:value="contains">contém</option>
+				</select>
+			</td>
+			<td colspan="2"><input type="text" class="form-control" placeholder="valor" th:id="@{|${header.value.name}_2|}"/></td>
+			<td style="display:none" th:text="text" th:id="@{|${header.value.name}_4|}"/></td>
+		</th:block>
+		
+		<!-- Filtro para data (Date) -->
+		<th:block th:fragment="date_filter">
+			<td>
+				<select class="form-control" th:id="@{|${header.value.name}_1|}">
+					<option th:value="empty"></option>
+					<option th:value="equal">=</option>
+					<option th:value="greaterthan">&gt;</option>
+					<option th:value="lowerthan">&lt;</option>
+					<option th:value="between">entre</option>
+				</select>
+			</td>
+			<td><input type="date" th:id="@{|${header.value.name}_2|}" class="form-control"></td>
+			<td><input type="date" th:id="@{|${header.value.name}_3|}" class="form-control"></td>
+			<td style="display:none" th:text="date" th:id="@{|${header.value.name}_4|}"/></td>
+		</th:block>
+		
+		<!-- Filtro para data/hora (Datetime) -->
+		<th:block th:fragment="datetime_filter">
+			<td>
+				<select class="form-control" th:id="@{|${header.value.name}_1|}">
+					<option th:value="empty"></option>
+					<option th:value="equal">=</option>
+					<option th:value="greaterthan">&gt;</option>
+					<option th:value="lowerthan">&lt;</option>
+					<option th:value="between">entre</option>
+				</select>
+			</td>
+			<td><input type="datetime-local" th:id="@{|${header.value.name}_2|}" class="form-control"></td>
+			<td><input type="datetime-local" th:id="@{|${header.value.name}_3|}" class="form-control"></td>
+			<td style="display:none" th:text="datetime" th:id="@{|${header.value.name}_4|}"/></td>
+		</th:block>
+		
+		<!-- Filtros não especificados -->
+		<th:block th:fragment="other_filter"></th:block>
+		
+		<!-- Filtro de limite -->
+		<th:block th:fragment="limit_filter">
+			<td>Limite de busca</td>
+			<td colspan="3"><input type="number" class="form-control" id="limit_1"/></td>
+			<td style="display:none" th:text="limit" id="limit_4"/></td>
+		</th:block>
+		
+		<th:block th:fragment="data_table">
+			<table class="table table-bordered table-hover tableUras table-striped mt-4" id="data-table">
+				<thead class="thead-dark">
+					<tr>
+						<th:block th:each="header : ${headers}">
+							<th th:text="${header.key}"></th>
+					</tr>
+					<tr>
+						<th:block class="filters" th:each="header : ${headers}">
+							<th> <input type="text" th:placeholder="${header.key}"/></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="line : ${table}">
+						<th:block th:each="string : ${line}">
+							<td th:text="${string}"></td>
+						</th:block>
+					</tr>
+				</tbody>
+			</table>
+		</th:block>
+	</section>
+</html>

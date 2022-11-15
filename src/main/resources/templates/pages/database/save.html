@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<title>Base de dados</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="local">Base de dados</div>
+		<div class="mt-5">
+			<form th:object="${database}" class="col-12" th:method="${function} == 'insert' ? 'post' : 'put'">
+				<th:block th:if="${function} == 'update'">
+					<input type="hidden" th:field="*{id}"/>
+				</th:block>
+				<div class="form-row mt-3">
+					<div class="col-6">
+						<label>Alias</label>
+						<input type="text" placeholder="alias" class="form-control" th:field="*{alias}" maxlength="255" required/>
+					</div>
+					<div class="col-6">
+						<label>Database</label>
+						<input type="text" placeholder="databaseName" class="form-control" th:field="*{databaseName}" maxlength="255" required/>
+					</div>
+				</div>
+				<div class="form-row mt-3">
+					<div class="col-12">
+						<label>Tipo de conexão</label>
+						<select class="form-control" required th:field="*{connectionType}">
+						    <option th:each="connection: ${connections}" th:value="${connection}" th:text="${#strings.substring(connection,0,#strings.length(connection)-10)}"></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-row mt-3">
+					<div class="col-8">
+						<label>IP</label>
+						<input type="text" placeholder="ip" class="form-control" th:field="*{ip}" maxlength="255" required/>
+					</div>
+					<div class="col-4">
+						<label>Porta</label>
+						<input type="text" placeholder="port" class="form-control" th:field="*{port}" maxlength="255" required/>
+					</div>
+				</div>
+				<div class="form-row mt-3">
+					<div class="col-6">
+						<label>Usuário</label>
+						<input type="text" placeholder="userName" class="form-control" th:field="*{userName}" maxlength="255" required/>
+					</div>
+					<div class="col-6">
+						<label>Senha</label>
+						<input type="password" placeholder="password" class="form-control" maxlength="255" th:field="*{password}"/>
+					</div>
+				</div>
+				<div class="form-row mt-3">
+					<div class="col-4">
+						<a th:href="@{/database/list}">
+			   				<button type="button" class="btn btn-primary col-12">Voltar</button>
+			   			</a>
+			   		</div>
+					<div class="col-4">
+					    <button type="button" th:id="btn1"class="btn btn-primary col-12" th:formaction="@{/api/database/testConnection}" 
+					    th:method="post" th:attr="onclick=|popup('btn1')|">Testar</button>
+			   		</div>
+					<div class="col-4">
+			   			<button type="submit" class="btn btn-primary col-12" th:formaction="@{|/database/save|}" th:text="${function} == 'insert' ? 'Adicionar' : 'Atualizar'"></button>
+			   		</div>
+				</div>
+			</form>
+		</div>
+	</section>
+</body>
+
+</html>

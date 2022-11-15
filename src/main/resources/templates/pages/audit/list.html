@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<title>Auditoria</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"/>
+
+<script th:src="@{/js/jquery-3.5.1.js}"></script>
+<th:block th:include="datatable_import.html :: datatable_import"></th:block>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="local">Auditoria</div>
+		<div class="mt-5">
+			<table class="table table-bordered table-hover table-striped mt-4" id="data-table">
+				<thead class="thead-dark">
+					<tr>
+						<th class="text-center">Data</th>
+						<th class="text-center">Ação</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${#lists.isEmpty(audits)}">
+						<td th:colspan="2" class="text-center">Nenhuma informação localizada</td>
+					</tr>
+					<tr th:each="audit : ${audits}">
+						<td th:text="${audit.dateTimeFormatted}"></td>
+						<td th:text="${audit.actionDescription}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<title>Usuário</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="local">Usúario</div>
+		<div class="mt-5">
+			<form th:object="${user}" class="col-12" th:method="${function} == 'insert' ? 'post' : 'put'">
+				<th:block th:if="${function} == 'update'">
+					<input type="hidden" th:field="*{id}"/>
+				</th:block>
+				<div class="form-row mt-3">
+					<div class="col-12">
+						<label>Função</label>
+						<select class="form-control" required th:field="*{role}">
+						    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-row mt-3">
+					<div class="col-4">
+						<label>Nome</label>
+						<input type="text" placeholder="Nome" class="form-control" th:field="*{name}" maxlength="255" required/>
+					</div>
+					<div class="col-4">
+						<label>E-mail</label>
+						<input type="email" placeholder="E-mail" class="form-control" th:field="*{email}" maxlength="255" required/>
+					</div>
+					<div class="col-4">
+						<label>Senha</label>
+						<input type="password" placeholder="Senha" class="form-control" th:field="*{password}" maxlength="255" required/>
+					</div>
+				</div>
+				<div class="form-row mt-3">
+					<div class="col-6">
+						<a th:href="@{/user/list}">
+			   				<button type="button" class="btn btn-primary col-12">Voltar</button>
+			   			</a>
+			   		</div>
+					<div class="col-6">
+			   			<button type="submit" class="btn btn-primary col-12" th:formaction="@{|/user/save|}" th:text="${function} == 'insert' ? 'Adicionar' : 'Atualizar'"></button>
+			   		</div>
+				</div>
+			</form>
+		</div>
+	</section>
+</body>
+
+</html>

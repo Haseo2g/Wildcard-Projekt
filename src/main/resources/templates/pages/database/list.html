@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<title>Lista de bases de dados</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body>
+	<section layout:fragment="content">
+		<div class="local">Bases de dados</div>
+		<div class="mt-5">
+			<div th:class="${status_alert}" role="alert" th:if="${message} != null">
+				<span th:text="${message}"></span>
+			    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<a th:href="@{/database/insert}" class="col-4" sec:authorize="hasAnyAuthority('Admin')">
+				<button type="button" class="btn btn-primary">Adicionar nova base</button>
+			</a>
+			<table class="table table-bordered table-hover table-striped mt-4">
+				<thead class="thead-dark">
+					<tr>
+						<th class="text-center">Nome</th>
+						<th class="text-center">Ip</th>
+						<th class="text-center">Porta</th>
+						<th class="text-center">Database</th>
+						<th class="text-center">Conexão</th>
+						<th class="text-center">Validar</th>
+						<th class="text-center" sec:authorize="hasAnyAuthority('Admin')">Editar</th>
+						<th class="text-center" sec:authorize="hasAnyAuthority('Admin')">Excluir</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${#lists.isEmpty(databases)}">
+						<td th:colspan="100" class="text-center">Nenhuma base de dados encontrada...</td>
+					</tr>
+					<tr th:each="database : ${databases}">
+						<td th:text="${database.alias}"></td>
+						<td th:text="${database.ip}"></td>
+						<td th:text="${database.port}"></td>
+						<td th:text="${database.databaseName}"></td>
+						<td th:text="${#strings.substring(database.connectionType, 0, #strings.length(database.connectionType)-10)}"></td>
+						<td class="functional-icon">
+							<form th:object="${database}">
+								<a href="#"><i class="fa fa-check-square" th:id="|test_${database.id}|" th:formaction="@{|/api/database/testConnection?idDatabase=${database.id}|}" th:method="get" th:attr="onclick=|popup('test_${database.id}')|"></i></a>
+							</form>
+						</td>
+						<td class="functional-icon"><a th:href="@{|/database/update?idDatabase=${database.id}|}" sec:authorize="hasAnyAuthority('Admin')"><i class="fa fa-pencil-square-o"></i></a></td>
+						<td width="10%" class="functional-icon" sec:authorize="hasAnyAuthority('Admin')">
+							<form th:method="delete">
+								<button class="action-button" type="submit" th:formaction="@{|/database/delete?idDatabase=${database.id}|}" th:id="@{|del_${database.id}|}" th:attr="onclick=|return confirm('Você realmente deseja deleta a base de dados [${database.alias}]?')|" >
+									<i class="fa fa-trash"></i>
+								</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+</body>
+
+</html>
